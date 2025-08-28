@@ -8,7 +8,7 @@ Created on Wed Aug 27 15:41:26 2025
 import xarray as xr
 import numpy as np
 
-def calc_wind_energy(input_nc, output_nc, rho=1.225, compress=True):
+def calc_wind_energy(input_nc, output_nc, rho=1.225, compress=False):
     """
     从风场文件计算风能密度和风向，并保存为新的 NetCDF 文件
 
@@ -46,11 +46,14 @@ def calc_wind_energy(input_nc, output_nc, rho=1.225, compress=True):
 
     # 合并成新数据集
     ds_out = xr.Dataset(
-        {
+        {   
+            "u10": u10,
+            "v10": v10,
             "wind_power_density": wind_power_density,
             "wind_direction": wind_direction
         },
-        coords=ds.coords
+        coords=ds.coords,
+        attrs=ds.attrs
     )
 
     # 压缩设置
@@ -70,4 +73,4 @@ def calc_wind_energy(input_nc, output_nc, rho=1.225, compress=True):
 
 # 使用示例
 if __name__ == "__main__":
-    calc_wind_energy("wind.nc", "wind_energy.nc")
+    calc_wind_energy("F:\wind_wave\REANALYSIS\wind_202112.nc", "F:\wind_power\wind_energy.nc")

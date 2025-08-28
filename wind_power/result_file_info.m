@@ -30,7 +30,11 @@ end_n = 5;
 % end
 aa1 = ncread(nc, 'xgrid');
 aa2 = ncread(nc, 'ygrid');
-% aa3 = ncread(nc, 'Times');
+aa3 = ncread(nc, 'depth');
+pcolor(aa1,aa2,aa3);
+shading flat
+colorbar
+clim([0 50])
 % % aa3 = aa3';
 % nc = [filepath,'\',string(ncfile{2,1})];
 % nc = [nc{:}];
