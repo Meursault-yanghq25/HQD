@@ -14,8 +14,8 @@ import xarray as xr
 
 
 #!!--------------------------------------------
-inputfolder = r"F:\wind_wave\REANALYSIS"
-outputfolder = r"F:\wind_power"
+inputfolder = r"F:\wind_wave\yearly"
+outputfolder = r"F:\wind_power\yearly"
 #----------------------------------------------
 
 
