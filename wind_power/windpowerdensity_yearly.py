@@ -10,9 +10,10 @@ import glob
 import time
 import xarray as xr
 from tqdm import tqdm
+import numpy as np
 
 inputfolder = r"F:\wind_power\yearly"
-outputfolder = r"F:\wind_power\yearly_mean"
+outputfolder = r"F:\wind_power\yearly_mean_only"
     
     
 def yearly_mean(input_file, output_file, compress=False):
@@ -32,15 +33,26 @@ def yearly_mean(input_file, output_file, compress=False):
     # Lire le fichier
     ds = xr.open_dataset(input_file)
 
-    # Calculer la moyenne temporelle pour chaque variable
-    ds_mean = ds.mean(dim="time", keep_attrs=True)
+    # ---- Calculer la vitesse instantanée du vent ----
+    wind_speed = np.sqrt(ds["u10"]**2 + ds["v10"]**2)
+    wind_speed = wind_speed.rename("wind_speed")
+    wind_speed.attrs["units"] = "m s-1"
+    wind_speed.attrs["long_name"] = "Wind Speed at 10m"
+
+    # Ajouter wind_speed au dataset
+    ds = ds.assign(wind_speed=wind_speed)
+
+    # ---- Calculer la moyenne temporelle pour chaque variable ----
+    ds_mean = ds.mean(dim="time", skipna=True, keep_attrs=True)
 
     # Renommer les variables moyennes (ajout suffixe "_mean")
+    keep_vars = ["wind_power_density", "wind_direction", "wind_speed"]
+    ds_mean = ds_mean[keep_vars]
     ds_mean = ds_mean.rename({var: var + "_mean" for var in ds_mean.data_vars})
 
     # Fusionner original + moyennes
-    ds_out = xr.merge([ds, ds_mean])
-
+    # ds_out = xr.merge([ds, ds_mean])
+    ds_out = xr.merge([ds_mean])
     # Encodage pour compression
     if compress:
         encoding = {var: {"zlib": True, "complevel": 4} for var in ds_out.data_vars}
@@ -87,7 +99,7 @@ if __name__ == "__main__":
         print("\nLast output file information:")
         print(f"File: {last_file}")
         ds_example = xr.open_dataset(last_file)
-        print(ds_example.time)
+        # print(ds_example.time)
         print(ds_example)
         ds_example.close()
         

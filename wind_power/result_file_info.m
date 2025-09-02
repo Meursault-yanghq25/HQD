@@ -19,7 +19,7 @@ end
 %
 
 %% check var
-nc = [filepath,'\',string(ncfile{4,1})];
+nc = [filepath,'\',string(ncfile{6,1})];
 nc = [nc{:}];
 nc_info = ncinfo(nc);
 begin_n = 1;
@@ -30,11 +30,24 @@ end_n = 5;
 % end
 aa1 = ncread(nc, 'xgrid');
 aa2 = ncread(nc, 'ygrid');
-aa3 = ncread(nc, 'depth');
-pcolor(aa1,aa2,aa3);
+aa3 = ncread(nc, 'u');
+aa4 = ncread(nc, 'v');
+aa5 = ncread(nc, 'depth');
+
+%%
+xx = aa3(:,:,1);
+yy = aa4(:,:,1);
+zz = sqrt(xx.^2+yy.^2);
+zz(aa5<0)=nan;
+max(max(zz))
+figure
+m_proj('miller','lon',[121 124],'lat',[28 31])
+m_pcolor(aa1,aa2,aa5);
 shading flat
 colorbar
-clim([0 50])
+clim([0 100])
+m_gshhs_i('patch',[0.5 0.5 0.5]);
+m_grid('fontname','Arial','fontsize',14,'linewidth',2,'linestyle','none'); 
 % % aa3 = aa3';
 % nc = [filepath,'\',string(ncfile{2,1})];
 % nc = [nc{:}];

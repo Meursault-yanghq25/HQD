@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 from windrose import WindroseAxes
 import os
 
-filename = r"F:\wind_power\wind_202112_power.nc"
+filename = r"F:\wind_power\yearly\wind_2021_power.nc"
 
 # 打开 nc 文件
 ds = xr.open_dataset(filename)
