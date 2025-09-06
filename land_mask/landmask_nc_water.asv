@@ -1,0 +1,22 @@
+clc,clear;
+%% input/output
+nc_folder = 'F:\water_para';
+shp_file = "E:/AAAAA/HQD/land_mask/FAB_final_land_mask.shp";
+output_folder = "F:\water_para_masked";
+%
+%% nc list
+ncfile = struct2table(dir([nc_folder,'\*.nc']));
+ncfile = ncfile(:,1);
+%% create mask tif
+mask_sample_nc = [nc_folder,'\',string(ncfile{1,1})];
+mask_sample_nc = [mask_sample_nc{:}];
+output_file = [output_folder,'\mask.tif'];
+cover_value = 0;
+% create_mask_from_shp_nc(shp_file, mask_sample_nc, output_file, cover_value);
+nc_file = mask_sample_nc;
+shp = shaperead(shp_file);
+lon = ncread(nc_file, 'xgrid');  
+lat = ncread(nc_file, 'ygrid'); 
+lon = lon(1,:)';
+lat = lat(:,1);
+create_mask_from_shp_nc(shp_file, lat, lon, output_file, cover_value)

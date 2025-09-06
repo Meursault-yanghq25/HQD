@@ -11,6 +11,9 @@ import rioxarray
 from shapely.geometry import mapping
 import os
 import numpy as np
+from tqdm import tqdm
+
+
 
 #!!----------------------input/output---------------
 nc_folder=r"F:\wind_power\yearly_mean"
@@ -44,6 +47,7 @@ def mask_nc_with_shp(nc_folder, shp_file, output_folder, invert=True):
     os.makedirs(output_folder, exist_ok=True)
     
     # 遍历文件夹中的 nc 文件
+    
     for fname in os.listdir(nc_folder):
         if fname.endswith(".nc"):
             in_path = os.path.join(nc_folder, fname)

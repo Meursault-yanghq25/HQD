@@ -1,6 +1,8 @@
 clc,clear;
 %% io
-filepath = 'F:\wind_power\yearly_mean_only_masked';
+filepath = 'F:\water_para_masked';
+% filepath = 'F:\water_para';
+
 disp(['filepath: ', filepath]);
 %
 
@@ -19,20 +21,20 @@ end
 %
 
 %% check var
-nc = [filepath,'\',string(ncfile{2,1})];
+nc = [filepath,'\',string(ncfile{1,1})];
 nc = [nc{:}];
 nc_info = ncinfo(nc);
 begin_n = 1;
-end_n = 6;
-vars = read_all_var(nc, nc_info, begin_n,end_n);
-for n = begin_n:end_n
-    eval([vars{1,n},'=','vars{2,n};']); %报错检查变量名合法性
-end
-% aa1 = ncread(nc, 'xgrid');
-% aa2 = ncread(nc, 'ygrid');
-% aa3 = ncread(nc, 'u');
+end_n = 8;
+% vars = read_all_var(nc, nc_info, begin_n,end_n);
+% for n = begin_n:end_n
+%     eval([vars{1,n},'=','vars{2,n};']); %报错检查变量名合法性
+% end
+aa1 = ncread(nc, 'xgrid');
+aa2 = ncread(nc, 'ygrid');
+aa3 = ncread(nc, 'u');
 % aa4 = ncread(nc, 'v');
-% aa5 = ncread(nc, 'depth');
+aa5 = ncread(nc, 'depth');
 
 %%
 % xx = aa3(:,:,1);
@@ -40,10 +42,12 @@ end
 % zz = sqrt(xx.^2+yy.^2);
 % zz(aa5<0)=nan;
 % max(max(zz))
-[Lon,Lat] = meshgrid(lon,lat);
+% [Lon,Lat] = meshgrid(lon,lat);
 figure
 m_proj('miller','lon',[119 125],'lat',[24 33])
-m_pcolor(Lon,Lat,u10(:,:,1)');
+% m_pcolor(Lon,Lat,u10(:,:,1)');
+m_pcolor(aa1,aa2,aa3(:,:,3));
+
 % shading flat
 colorbar
 % clim([0 100])
